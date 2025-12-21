@@ -1,0 +1,11 @@
+build-essential
+make
+cmake
+gcc-aarch64-none-elf
+binutils-aarch64-none-elf
+gdb-multiarch
+qemu-system-arm
+qemu-utils
+git
+vim
+screen
