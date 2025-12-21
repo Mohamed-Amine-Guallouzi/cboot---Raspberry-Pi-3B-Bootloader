@@ -186,26 +186,22 @@ void dump_registers(void) {
  * This simulates a reboot in QEMU.
  */
 void system_reboot(void) {
-    uart_puts("\r\n[SYSTEM] Rebooting system...\r\n");
-    
-    /* Small delay to see the message */
+    uart_puts("\r\n[SYSTEM] Rebooting...\r\n");
+
+    /* Small delay to flush UART output */
     delay(1000000);
-    
-    uart_puts("[SYSTEM] Resetting CPU...\r\n\r\n");
-    
-    /* Flush UART output */
-    delay(10000);
-    
-    /* Method 1: Jump to reset vector (simplest for QEMU) */
-    /* In QEMU, we can simulate reset by jumping to _start */
+
+    /* Jump to _start symbol (reset vector) */
+    extern void _start(void);
     asm volatile(
-        "mov x0, #0x8000\n"   /* Entry point address from linker.ld */
-        "br x0\n"
+        "ldr x0, =_start\n"
+        "br x0"
     );
-    
+
     /* Should never reach here */
     while(1);
 }
+
 
 /* ============================================================================
  * Main Bootloader Function
@@ -218,7 +214,7 @@ void boot_main(void) {
     /* Send boot message */
     uart_puts("\r\n");
     uart_puts("========================================\r\n");
-    uart_puts("cboot - Raspberry Pi 3B Bootloader\r\n");  // Changed from Pi 4 to Pi 3B
+    uart_puts("cboot - Raspberry Pi 3B Bootloader\r\n"); 
     uart_puts("Author: Mohammed Amine\r\n");
     uart_puts("Build: " __DATE__ " " __TIME__ "\r\n");
     uart_puts("========================================\r\n\r\n");
