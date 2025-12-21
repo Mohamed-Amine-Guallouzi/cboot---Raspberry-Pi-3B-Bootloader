@@ -1,32 +1,34 @@
-cboot - Raspberry Pi 3B Bare-metal Bootloader
-Author: Mohammed Amine
-Language: C & ARM64 Assembly
+# cboot - Raspberry Pi 3B Bare-metal Bootloader
 
-========================================
-Overview
-========================================
-cboot is a minimal bare-metal bootloader for Raspberry Pi 3B.
-It demonstrates how to initialize the CPU, stack, memory, and UART
-without an operating system. It also includes simple memory tests
-and an interactive UART echo test for debugging.
+A minimal bare-metal bootloader for Raspberry Pi 3B written in C and ARM64 assembly. This educational project demonstrates low-level system initialization without an operating system.
 
-========================================
-Features
-========================================
-- ARM64 startup code (start.S)
-- UART driver for serial communication
-- Memory utilities: memset, memcpy, strlen
-- CPU register dump for debugging
-- System control: halt and reboot
-- Interactive UART echo test with commands:
-    d → Dump registers
-    r → Reboot
-    e → Toggle echo
-    ? → Help
+## Overview
 
-========================================
-Project Structure
-========================================
+`cboot` is a learning-oriented bootloader that shows how to:
+
+* Initialize the ARM64 CPU and drop to EL1
+* Set up stack and memory sections
+* Implement a UART driver for serial communication
+* Run basic memory operations in bare-metal environment
+* Create an interactive debugging interface
+
+## Features
+
+* ARM64 startup assembly (`start.S`) - CPU initialization and EL drop
+* UART driver - PL011 UART communication for Raspberry Pi 3B
+* Memory utilities - memset, memcpy, strlen implementations
+* Debugging tools - CPU register dump, memory layout display
+* System control - Halt and reboot functionality
+* Interactive console - UART echo test with commands:
+
+  * `d` → Dump CPU registers
+  * `r` → Reboot the system
+  * `e` → Toggle echo mode
+  * `?` → Show help
+
+## Project Structure
+
+```
 build/               # Compiled binaries and object files
 include/
     boot.h           # Bootloader function declarations
@@ -38,45 +40,48 @@ src/
     boot.c           # Main bootloader logic
     uart.c           # UART driver implementation
     start.S          # ARM64 startup assembly code
+```
 
-========================================
-Build Requirements
-========================================
-- aarch64-none-elf-gcc
-- aarch64-none-elf-ld
-- aarch64-none-elf-objcopy
-- qemu-system-aarch64
+## Build Requirements
+
+* aarch64-none-elf-gcc
+* aarch64-none-elf-ld
+* aarch64-none-elf-objcopy
+* qemu-system-aarch64
 
 Debian/Ubuntu example:
+
+```bash
 sudo apt install build-essential make cmake gcc-aarch64-none-elf \
 binutils-aarch64-none-elf gdb-multiarch qemu-system-arm qemu-utils git vim screen
+```
 
-========================================
-Building and Running
-========================================
+## Building and Running
+
 1. Build the bootloader:
-    make clean
-    make
-   Output binary: build/cboot.bin
+
+```bash
+make clean
+make
+```
+
+Output binary: `build/cboot.bin`
 
 2. Run in QEMU (Raspberry Pi 3B emulation):
-    make run
+
+```bash
+make run
+```
 
 3. Debug with GDB:
-    make debug
 
-========================================
-Memory Layout
-========================================
-- Text: Executable code
-- ROData: Constants and strings
-- Data: Initialized global variables
-- BSS: Uninitialized globals (zeroed at startup)
-- Stack: 64 KB, grows downward
+```bash
+make debug
+```
 
-========================================
-Bootloader Flow
-========================================
+## Bootloader Flow
+
+```
 Power On / Reset
        │
        ▼
@@ -120,24 +125,22 @@ System Halt / Reboot
        │
        ▼
    End of Bootloader
+```
 
-========================================
-Usage
-========================================
-- Once booted, UART console shows boot messages.
-- Type characters to interact.
-- Commands: d, r, e, ?
+## Usage
 
-========================================
-Learning Outcomes
-========================================
-- How ARM64 CPU boots on Raspberry Pi
-- Writing bare-metal startup code
-- Initializing hardware without OS
-- Understanding memory sections (.text, .data, .bss, .stack)
-- Using UART for debugging and interaction
+* UART console displays boot messages.
+* Type characters to interact.
+* Commands: `d`, `r`, `e`, `?`.
 
-========================================
-License
-========================================
+## Learning Outcomes
+
+* Understand ARM64 CPU boot sequence on Raspberry Pi
+* Write bare-metal startup assembly and C code
+* Initialize memory and hardware without an OS
+* Use UART for debugging and communication
+* Learn memory sections: `.text`, `.data`, `.bss`, `.stack`
+
+## License
+
 Open-source. Free to use, study, and modify.
