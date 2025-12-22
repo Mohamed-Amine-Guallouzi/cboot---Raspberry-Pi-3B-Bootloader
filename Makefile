@@ -5,14 +5,13 @@
 # QEMU 8.2.2 supports up to Raspberry Pi 3B
 ###############################################################################
 
+
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
 
 # Build output directory
 BUILD_DIR = build
-
-# Create build directory if it doesn't exist
 $(shell mkdir -p $(BUILD_DIR))
 
 # Cross-compilation toolchain for ARM64 (bare-metal)
@@ -20,6 +19,7 @@ CC = aarch64-none-elf-gcc
 LD = aarch64-none-elf-ld
 OBJCOPY = aarch64-none-elf-objcopy
 OBJDUMP = aarch64-none-elf-objdump
+GDB = gdb-multiarch
 
 # Source files
 SRC_DIR = src
@@ -37,10 +37,10 @@ INC_DIR = include
 # ============================================================================
 
 # C Compiler flags
-CFLAGS = -Wall -Wextra -O0 -ffreestanding -nostdlib -nostartfiles -I$(INC_DIR)
+CFLAGS = -Wall -Wextra -O0 -g -ffreestanding -nostdlib -nostartfiles -I$(INC_DIR)
 
 # Assembler flags
-ASFLAGS = -ffreestanding -I$(INC_DIR)
+ASFLAGS = -g -ffreestanding -I$(INC_DIR)
 
 # Linker flags
 LDFLAGS = -T linker.ld -nostdlib -Map=$(BUILD_DIR)/cboot.map
@@ -91,8 +91,8 @@ run: $(BUILD_DIR)/cboot.bin
 debug: $(BUILD_DIR)/cboot.elf
 	@echo "[QEMU] Starting debug server on port 1234..."
 	$(QEMU) $(QEMU_FLAGS) -kernel $(BUILD_DIR)/cboot.elf -S -s &
-	@echo "[GDB] Starting debugger..."
-	aarch64-none-elf-gdb $(BUILD_DIR)/cboot.elf -ex "target remote localhost:1234" -ex "break _start"
+	@echo "[GDB] Starting gdb-multiarch debugger..."
+	$(GDB) $(BUILD_DIR)/cboot.elf -ex "target remote localhost:1234" -ex "break _start"
 
 size: $(BUILD_DIR)/cboot.elf
 	@echo "[SIZE] Memory usage:"
@@ -118,7 +118,7 @@ help:
 	@echo "Available targets:"
 	@echo "  all       - Build binary (default)"
 	@echo "  run       - Run in QEMU"
-	@echo "  debug     - Debug with GDB"
+	@echo "  debug     - Debug with gdb-multiarch"
 	@echo "  size      - Show memory usage"
 	@echo "  disasm    - Generate disassembly"
 	@echo "  qemu-test - Check available QEMU machines"
