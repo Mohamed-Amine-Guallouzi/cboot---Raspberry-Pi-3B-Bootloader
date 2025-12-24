@@ -6,6 +6,3 @@ binutils-aarch64-none-elf
 gdb-multiarch
 qemu-system-arm
 qemu-utils
-git
-vim
-screen
